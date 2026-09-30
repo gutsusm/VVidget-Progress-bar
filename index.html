@@ -3,86 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Time Progress</title>
 
 <style>
-    * {
-        box-sizing: border-box;
+*{box-sizing:border-box}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    background:#191919;
+    overflow:hidden;
+}
+
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    color:#fff;
+}
+
+.widget{
+    width:100%;
+    aspect-ratio:1/1;
+    max-width:420px;
+    min-width:180px;
+
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:14px;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:52px 1fr 38px;
+    align-items:center;
+    gap:9px;
+}
+
+.label,
+.percent{
+    font-size:12px;
+    font-weight:500;
+    white-space:nowrap;
+}
+
+.percent{
+    text-align:right;
+}
+
+.bar{
+    height:6px;
+    background:#292929;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    width:0;
+    background:#fff;
+    border-radius:20px;
+    transition:width:.4s ease;
+}
+
+@media(max-width:260px){
+    .widget{
+        padding:14px;
+        gap:10px;
     }
 
-    html,
-    body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        background: #191919;
-        overflow: hidden;
+    .row{
+        grid-template-columns:45px 1fr 34px;
+        gap:6px;
     }
 
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: #ffffff;
+    .label,
+    .percent{
+        font-size:10px;
     }
 
-    .widget {
-        width: 100%;
-        height: 100%;
-        min-height: 120px;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-
-        padding: clamp(12px, 4vw, 28px);
-        gap: clamp(10px, 2.5vw, 18px);
+    .bar{
+        height:5px;
     }
-
-    .progress-row {
-        width: 100%;
-
-        display: grid;
-        grid-template-columns:
-            clamp(65px, 14%, 100px)
-            minmax(80px, 1fr)
-            clamp(38px, 8%, 55px);
-
-        align-items: center;
-        gap: clamp(8px, 2vw, 16px);
-    }
-
-    .label {
-        font-size: clamp(11px, 2vw, 15px);
-        font-weight: 500;
-        white-space: nowrap;
-    }
-
-    .percentage {
-        font-size: clamp(11px, 2vw, 15px);
-        font-weight: 500;
-        text-align: right;
-        white-space: nowrap;
-    }
-
-    .bar {
-        width: 100%;
-        height: clamp(5px, 1vw, 8px);
-
-        background: #2a2a2a;
-        border-radius: 100px;
-        overflow: hidden;
-    }
-
-    .fill {
-        height: 100%;
-        width: 0%;
-
-        background: #ffffff;
-        border-radius: 100px;
-
-        transition: width 0.5s ease;
-    }
+}
 </style>
 </head>
 
@@ -90,285 +94,98 @@
 
 <div class="widget">
 
-    <div class="progress-row">
+    <div class="row">
         <div class="label">Year</div>
-
-        <div class="bar">
-            <div class="fill" id="yearFill"></div>
-        </div>
-
-        <div class="percentage" id="yearPercent">0%</div>
+        <div class="bar"><div class="fill" id="year"></div></div>
+        <div class="percent" id="yearText">0%</div>
     </div>
 
-
-    <div class="progress-row">
+    <div class="row">
         <div class="label">Quarter</div>
-
-        <div class="bar">
-            <div class="fill" id="quarterFill"></div>
-        </div>
-
-        <div class="percentage" id="quarterPercent">0%</div>
+        <div class="bar"><div class="fill" id="quarter"></div></div>
+        <div class="percent" id="quarterText">0%</div>
     </div>
 
-
-    <div class="progress-row">
+    <div class="row">
         <div class="label">Month</div>
-
-        <div class="bar">
-            <div class="fill" id="monthFill"></div>
-        </div>
-
-        <div class="percentage" id="monthPercent">0%</div>
+        <div class="bar"><div class="fill" id="month"></div></div>
+        <div class="percent" id="monthText">0%</div>
     </div>
 
-
-    <div class="progress-row">
+    <div class="row">
         <div class="label">Week</div>
-
-        <div class="bar">
-            <div class="fill" id="weekFill"></div>
-        </div>
-
-        <div class="percentage" id="weekPercent">0%</div>
+        <div class="bar"><div class="fill" id="week"></div></div>
+        <div class="percent" id="weekText">0%</div>
     </div>
 
-
-    <div class="progress-row">
+    <div class="row">
         <div class="label">Day</div>
-
-        <div class="bar">
-            <div class="fill" id="dayFill"></div>
-        </div>
-
-        <div class="percentage" id="dayPercent">0%</div>
+        <div class="bar"><div class="fill" id="day"></div></div>
+        <div class="percent" id="dayText">0%</div>
     </div>
 
 </div>
 
-
 <script>
 
-function percentagePassed(start, end, now) {
-
-    const total = end - start;
-    const passed = now - start;
-
-    let percentage = (passed / total) * 100;
-
-    percentage = Math.max(0, Math.min(100, percentage));
-
-    return percentage;
+function progress(start,end,now){
+    return Math.max(0,Math.min(100,
+        ((now-start)/(end-start))*100
+    ));
 }
 
+function update(){
 
-function startOfDay(date) {
+    const now=new Date();
+    const y=now.getFullYear();
+    const m=now.getMonth();
+    const d=now.getDate();
 
-    return new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate()
-    );
-}
+    const yearStart=new Date(y,0,1);
+    const yearEnd=new Date(y+1,0,1);
 
-
-function endOfDay(date) {
-
-    return new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate() + 1
-    );
-}
-
-
-function startOfWeek(date) {
-
-    const result = new Date(date);
-
-    const day = result.getDay();
-
-    // Monday = 0
-    const difference = day === 0 ? -6 : 1 - day;
-
-    result.setDate(result.getDate() + difference);
-
-    result.setHours(0, 0, 0, 0);
-
-    return result;
-}
-
-
-function endOfWeek(date) {
-
-    const result = startOfWeek(date);
-
-    result.setDate(result.getDate() + 7);
-
-    return result;
-}
-
-
-function startOfMonth(date) {
-
-    return new Date(
-        date.getFullYear(),
-        date.getMonth(),
+    const quarterStart=new Date(
+        y,
+        Math.floor(m/3)*3,
         1
     );
-}
 
-
-function endOfMonth(date) {
-
-    return new Date(
-        date.getFullYear(),
-        date.getMonth() + 1,
+    const quarterEnd=new Date(
+        y,
+        Math.floor(m/3)*3+3,
         1
     );
+
+    const monthStart=new Date(y,m,1);
+    const monthEnd=new Date(y,m+1,1);
+
+    const day=now.getDay();
+    const monday=new Date(y,m,d-(day===0?6:day-1));
+    monday.setHours(0,0,0,0);
+
+    const sunday=new Date(monday);
+    sunday.setDate(monday.getDate()+7);
+
+    const dayStart=new Date(y,m,d);
+    const dayEnd=new Date(y,m,d+1);
+
+    set("year",progress(yearStart,yearEnd,now));
+    set("quarter",progress(quarterStart,quarterEnd,now));
+    set("month",progress(monthStart,monthEnd,now));
+    set("week",progress(monday,sunday,now));
+    set("day",progress(dayStart,dayEnd,now));
 }
 
+function set(id,value){
 
-function startOfQuarter(date) {
+    const n=Math.floor(value);
 
-    const quarterMonth = Math.floor(date.getMonth() / 3) * 3;
-
-    return new Date(
-        date.getFullYear(),
-        quarterMonth,
-        1
-    );
+    document.getElementById(id).style.width=n+"%";
+    document.getElementById(id+"Text").textContent=n+"%";
 }
 
-
-function endOfQuarter(date) {
-
-    const quarterMonth = Math.floor(date.getMonth() / 3) * 3;
-
-    return new Date(
-        date.getFullYear(),
-        quarterMonth + 3,
-        1
-    );
-}
-
-
-function startOfYear(date) {
-
-    return new Date(
-        date.getFullYear(),
-        0,
-        1
-    );
-}
-
-
-function endOfYear(date) {
-
-    return new Date(
-        date.getFullYear() + 1,
-        0,
-        1
-    );
-}
-
-
-function updateProgress() {
-
-    const now = new Date();
-
-
-    // YEAR
-    const yearProgress = percentagePassed(
-        startOfYear(now),
-        endOfYear(now),
-        now
-    );
-
-
-    // QUARTER
-    const quarterProgress = percentagePassed(
-        startOfQuarter(now),
-        endOfQuarter(now),
-        now
-    );
-
-
-    // MONTH
-    const monthProgress = percentagePassed(
-        startOfMonth(now),
-        endOfMonth(now),
-        now
-    );
-
-
-    // WEEK
-    const weekProgress = percentagePassed(
-        startOfWeek(now),
-        endOfWeek(now),
-        now
-    );
-
-
-    // DAY
-    const dayProgress = percentagePassed(
-        startOfDay(now),
-        endOfDay(now),
-        now
-    );
-
-
-    updateBar(
-        "year",
-        yearProgress
-    );
-
-    updateBar(
-        "quarter",
-        quarterProgress
-    );
-
-    updateBar(
-        "month",
-        monthProgress
-    );
-
-    updateBar(
-        "week",
-        weekProgress
-    );
-
-    updateBar(
-        "day",
-        dayProgress
-    );
-}
-
-
-function updateBar(name, value) {
-
-    const roundedValue = Math.floor(value);
-
-    document.getElementById(
-        name + "Fill"
-    ).style.width = roundedValue + "%";
-
-
-    document.getElementById(
-        name + "Percent"
-    ).textContent = roundedValue + "%";
-}
-
-
-// Первое обновление
-updateProgress();
-
-
-// Обновляем каждую секунду
-setInterval(
-    updateProgress,
-    1000
-);
+update();
+setInterval(update,1000);
 
 </script>
 
