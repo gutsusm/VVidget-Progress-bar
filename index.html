@@ -7,6 +7,7 @@
 <title>Time Progress</title>
 
 <style>
+
 * {
     box-sizing: border-box;
 }
@@ -15,20 +16,34 @@ html,
 body {
     margin: 0;
     padding: 0;
+
     width: 100%;
+    height: 100%;
+
     background: #191919;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
     color: #ffffff;
+
     overflow: hidden;
 }
 
-/* КВАДРАТНЫЙ ВИДЖЕТ */
+
+/* =========================
+   САМ ВИДЖЕТ
+   ========================= */
+
 .widget {
-    width: 100%;
-    aspect-ratio: 1 / 1;
+
+    width: 320px;
+    height: 320px;
 
     padding: 24px;
 
@@ -39,36 +54,57 @@ body {
     gap: 16px;
 
     background: #191919;
+
 }
 
 
-/* СТРОКА */
+/* =========================
+   СТРОКА
+   ========================= */
+
 .row {
+
     width: 100%;
 
     display: grid;
-    grid-template-columns: 62px 1fr 42px;
+
+    grid-template-columns:
+        62px
+        1fr
+        42px;
 
     align-items: center;
 
     gap: 10px;
+
 }
 
 
-/* ТЕКСТ */
+/* =========================
+   ТЕКСТ
+   ========================= */
+
 .label {
+
     font-size: 13px;
+
     font-weight: 500;
 
     color: #ffffff;
 
     white-space: nowrap;
+
 }
 
 
-/* ПРОЦЕНТ */
+/* =========================
+   ПРОЦЕНТ
+   ========================= */
+
 .percent {
+
     font-size: 13px;
+
     font-weight: 500;
 
     color: #ffffff;
@@ -76,12 +112,18 @@ body {
     text-align: right;
 
     white-space: nowrap;
+
 }
 
 
-/* ВНЕШНЯЯ ОБОЛОЧКА БАРА */
+/* =========================
+   ВНЕШНИЙ BAR
+   ========================= */
+
 .bar {
+
     width: 100%;
+
     height: 17px;
 
     background: #292929;
@@ -91,54 +133,87 @@ body {
     padding: 4px;
 
     overflow: hidden;
+
 }
 
 
-/* БЕЛОЕ ЗАПОЛНЕНИЕ */
+/* =========================
+   ЗАПОЛНЕНИЕ
+   ========================= */
+
 .fill {
+
     width: 0%;
+
     height: 100%;
 
     background: #ffffff;
 
     border-radius: 100px;
 
-    transition: width 0.5s ease;
+    transition:
+        width 0.5s ease;
+
 }
 
 
-/* МАЛЕНЬКИЙ РАЗМЕР */
-@media (max-width: 300px) {
+/* =========================
+   ЕСЛИ ЭКРАН МАЛЕНЬКИЙ
+   ========================= */
+
+@media (max-width: 340px) {
 
     .widget {
-        padding: 16px;
+
+        width: 280px;
+        height: 280px;
+
+        padding: 18px;
+
         gap: 13px;
+
     }
 
     .row {
-        grid-template-columns: 52px 1fr 36px;
+
+        grid-template-columns:
+            52px
+            1fr
+            36px;
+
         gap: 7px;
+
     }
 
     .label,
     .percent {
+
         font-size: 11px;
+
     }
 
     .bar {
+
         height: 15px;
+
         padding: 3px;
+
     }
+
 }
+
 </style>
 </head>
 
 
 <body>
 
+
 <div class="widget">
 
+
     <!-- YEAR -->
+
     <div class="row">
 
         <div class="label">
@@ -146,10 +221,12 @@ body {
         </div>
 
         <div class="bar">
+
             <div
                 class="fill"
                 id="year">
             </div>
+
         </div>
 
         <div
@@ -162,6 +239,7 @@ body {
 
 
     <!-- QUARTER -->
+
     <div class="row">
 
         <div class="label">
@@ -169,10 +247,12 @@ body {
         </div>
 
         <div class="bar">
+
             <div
                 class="fill"
                 id="quarter">
             </div>
+
         </div>
 
         <div
@@ -185,6 +265,7 @@ body {
 
 
     <!-- MONTH -->
+
     <div class="row">
 
         <div class="label">
@@ -192,10 +273,12 @@ body {
         </div>
 
         <div class="bar">
+
             <div
                 class="fill"
                 id="month">
             </div>
+
         </div>
 
         <div
@@ -208,6 +291,7 @@ body {
 
 
     <!-- WEEK -->
+
     <div class="row">
 
         <div class="label">
@@ -215,10 +299,12 @@ body {
         </div>
 
         <div class="bar">
+
             <div
                 class="fill"
                 id="week">
             </div>
+
         </div>
 
         <div
@@ -231,6 +317,7 @@ body {
 
 
     <!-- DAY -->
+
     <div class="row">
 
         <div class="label">
@@ -238,10 +325,12 @@ body {
         </div>
 
         <div class="bar">
+
             <div
                 class="fill"
                 id="day">
             </div>
+
         </div>
 
         <div
@@ -252,43 +341,67 @@ body {
 
     </div>
 
+
 </div>
+
 
 
 <script>
 
-/* РАСЧЁТ ПРОЦЕНТА */
+
+/* =========================
+   ПРОЦЕНТ
+   ========================= */
 
 function progress(start, end, now) {
 
     const value =
-        ((now - start) / (end - start)) * 100;
+        ((now - start) /
+        (end - start)) * 100;
 
     return Math.max(
         0,
         Math.min(100, value)
     );
+
 }
 
 
-/* ОБНОВЛЕНИЕ */
+/* =========================
+   ОБНОВЛЕНИЕ
+   ========================= */
 
 function update() {
 
-    const now = new Date();
+    const now =
+        new Date();
 
-    const year = now.getFullYear();
-    const month = now.getMonth();
-    const date = now.getDate();
+
+    const year =
+        now.getFullYear();
+
+    const month =
+        now.getMonth();
+
+    const date =
+        now.getDate();
 
 
     /* YEAR */
 
     const yearStart =
-        new Date(year, 0, 1);
+        new Date(
+            year,
+            0,
+            1
+        );
 
     const yearEnd =
-        new Date(year + 1, 0, 1);
+        new Date(
+            year + 1,
+            0,
+            1
+        );
 
 
     /* QUARTER */
@@ -338,10 +451,13 @@ function update() {
             year,
             month,
             date -
-            (dayOfWeek === 0
+            (
+                dayOfWeek === 0
                 ? 6
-                : dayOfWeek - 1)
+                : dayOfWeek - 1
+            )
         );
+
 
     monday.setHours(
         0,
@@ -350,8 +466,12 @@ function update() {
         0
     );
 
+
     const nextMonday =
-        new Date(monday);
+        new Date(
+            monday
+        );
+
 
     nextMonday.setDate(
         monday.getDate() + 7
@@ -375,7 +495,7 @@ function update() {
         );
 
 
-    /* УСТАНОВКА */
+    /* YEAR */
 
     setProgress(
         "year",
@@ -386,6 +506,9 @@ function update() {
         )
     );
 
+
+    /* QUARTER */
+
     setProgress(
         "quarter",
         progress(
@@ -394,6 +517,9 @@ function update() {
             now
         )
     );
+
+
+    /* MONTH */
 
     setProgress(
         "month",
@@ -404,6 +530,9 @@ function update() {
         )
     );
 
+
+    /* WEEK */
+
     setProgress(
         "week",
         progress(
@@ -413,6 +542,9 @@ function update() {
         )
     );
 
+
+    /* DAY */
+
     setProgress(
         "day",
         progress(
@@ -421,40 +553,54 @@ function update() {
             now
         )
     );
+
 }
 
 
-/* ОТОБРАЖЕНИЕ */
+/* =========================
+   ОТОБРАЖЕНИЕ
+   ========================= */
 
-function setProgress(id, value) {
+function setProgress(
+    id,
+    value
+) {
 
     const percent =
         Math.floor(value);
 
-    document.getElementById(id)
+
+    document
+        .getElementById(id)
         .style.width =
         percent + "%";
 
-    document.getElementById(
-        id + "Text"
-    ).textContent =
+
+    document
+        .getElementById(
+            id + "Text"
+        )
+        .textContent =
         percent + "%";
+
 }
 
 
-/* ПЕРВОЕ ОБНОВЛЕНИЕ */
+/* =========================
+   ЗАПУСК
+   ========================= */
 
 update();
 
-
-/* ОБНОВЛЕНИЕ КАЖДУЮ СЕКУНДУ */
 
 setInterval(
     update,
     1000
 );
 
+
 </script>
+
 
 </body>
 </html>
