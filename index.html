@@ -3,189 +3,456 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Time Progress</title>
 
 <style>
-*{box-sizing:border-box}
-
-html,body{
-    margin:0;
-    width:100%;
-    height:100%;
-    background:#191919;
-    overflow:hidden;
+* {
+    box-sizing: border-box;
 }
 
-body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    color:#fff;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background: #191919;
 }
 
-.widget{
-    width:100%;
-    aspect-ratio:1/1;
-    max-width:420px;
-    min-width:180px;
-
-    padding:22px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    gap:14px;
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #ffffff;
+    overflow: hidden;
 }
 
-.row{
-    display:grid;
-    grid-template-columns:52px 1fr 38px;
-    align-items:center;
-    gap:9px;
+/* КВАДРАТНЫЙ ВИДЖЕТ */
+.widget {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+
+    padding: 24px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 16px;
+
+    background: #191919;
 }
 
-.label,
-.percent{
-    font-size:12px;
-    font-weight:500;
-    white-space:nowrap;
+
+/* СТРОКА */
+.row {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 62px 1fr 42px;
+
+    align-items: center;
+
+    gap: 10px;
 }
 
-.percent{
-    text-align:right;
+
+/* ТЕКСТ */
+.label {
+    font-size: 13px;
+    font-weight: 500;
+
+    color: #ffffff;
+
+    white-space: nowrap;
 }
 
-.bar{
-    height:6px;
-    background:#292929;
-    border-radius:20px;
-    overflow:hidden;
+
+/* ПРОЦЕНТ */
+.percent {
+    font-size: 13px;
+    font-weight: 500;
+
+    color: #ffffff;
+
+    text-align: right;
+
+    white-space: nowrap;
 }
 
-.fill{
-    height:100%;
-    width:0;
-    background:#fff;
-    border-radius:20px;
-    transition:width:.4s ease;
+
+/* ВНЕШНЯЯ ОБОЛОЧКА БАРА */
+.bar {
+    width: 100%;
+    height: 17px;
+
+    background: #292929;
+
+    border-radius: 100px;
+
+    padding: 4px;
+
+    overflow: hidden;
 }
 
-@media(max-width:260px){
-    .widget{
-        padding:14px;
-        gap:10px;
+
+/* БЕЛОЕ ЗАПОЛНЕНИЕ */
+.fill {
+    width: 0%;
+    height: 100%;
+
+    background: #ffffff;
+
+    border-radius: 100px;
+
+    transition: width 0.5s ease;
+}
+
+
+/* МАЛЕНЬКИЙ РАЗМЕР */
+@media (max-width: 300px) {
+
+    .widget {
+        padding: 16px;
+        gap: 13px;
     }
 
-    .row{
-        grid-template-columns:45px 1fr 34px;
-        gap:6px;
+    .row {
+        grid-template-columns: 52px 1fr 36px;
+        gap: 7px;
     }
 
     .label,
-    .percent{
-        font-size:10px;
+    .percent {
+        font-size: 11px;
     }
 
-    .bar{
-        height:5px;
+    .bar {
+        height: 15px;
+        padding: 3px;
     }
 }
 </style>
 </head>
 
+
 <body>
 
 <div class="widget">
 
+    <!-- YEAR -->
     <div class="row">
-        <div class="label">Year</div>
-        <div class="bar"><div class="fill" id="year"></div></div>
-        <div class="percent" id="yearText">0%</div>
+
+        <div class="label">
+            Year
+        </div>
+
+        <div class="bar">
+            <div
+                class="fill"
+                id="year">
+            </div>
+        </div>
+
+        <div
+            class="percent"
+            id="yearText">
+            0%
+        </div>
+
     </div>
 
+
+    <!-- QUARTER -->
     <div class="row">
-        <div class="label">Quarter</div>
-        <div class="bar"><div class="fill" id="quarter"></div></div>
-        <div class="percent" id="quarterText">0%</div>
+
+        <div class="label">
+            Quarter
+        </div>
+
+        <div class="bar">
+            <div
+                class="fill"
+                id="quarter">
+            </div>
+        </div>
+
+        <div
+            class="percent"
+            id="quarterText">
+            0%
+        </div>
+
     </div>
 
+
+    <!-- MONTH -->
     <div class="row">
-        <div class="label">Month</div>
-        <div class="bar"><div class="fill" id="month"></div></div>
-        <div class="percent" id="monthText">0%</div>
+
+        <div class="label">
+            Month
+        </div>
+
+        <div class="bar">
+            <div
+                class="fill"
+                id="month">
+            </div>
+        </div>
+
+        <div
+            class="percent"
+            id="monthText">
+            0%
+        </div>
+
     </div>
 
+
+    <!-- WEEK -->
     <div class="row">
-        <div class="label">Week</div>
-        <div class="bar"><div class="fill" id="week"></div></div>
-        <div class="percent" id="weekText">0%</div>
+
+        <div class="label">
+            Week
+        </div>
+
+        <div class="bar">
+            <div
+                class="fill"
+                id="week">
+            </div>
+        </div>
+
+        <div
+            class="percent"
+            id="weekText">
+            0%
+        </div>
+
     </div>
 
+
+    <!-- DAY -->
     <div class="row">
-        <div class="label">Day</div>
-        <div class="bar"><div class="fill" id="day"></div></div>
-        <div class="percent" id="dayText">0%</div>
+
+        <div class="label">
+            Day
+        </div>
+
+        <div class="bar">
+            <div
+                class="fill"
+                id="day">
+            </div>
+        </div>
+
+        <div
+            class="percent"
+            id="dayText">
+            0%
+        </div>
+
     </div>
 
 </div>
 
+
 <script>
 
-function progress(start,end,now){
-    return Math.max(0,Math.min(100,
-        ((now-start)/(end-start))*100
-    ));
+/* РАСЧЁТ ПРОЦЕНТА */
+
+function progress(start, end, now) {
+
+    const value =
+        ((now - start) / (end - start)) * 100;
+
+    return Math.max(
+        0,
+        Math.min(100, value)
+    );
 }
 
-function update(){
 
-    const now=new Date();
-    const y=now.getFullYear();
-    const m=now.getMonth();
-    const d=now.getDate();
+/* ОБНОВЛЕНИЕ */
 
-    const yearStart=new Date(y,0,1);
-    const yearEnd=new Date(y+1,0,1);
+function update() {
 
-    const quarterStart=new Date(
-        y,
-        Math.floor(m/3)*3,
-        1
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const date = now.getDate();
+
+
+    /* YEAR */
+
+    const yearStart =
+        new Date(year, 0, 1);
+
+    const yearEnd =
+        new Date(year + 1, 0, 1);
+
+
+    /* QUARTER */
+
+    const quarterMonth =
+        Math.floor(month / 3) * 3;
+
+    const quarterStart =
+        new Date(
+            year,
+            quarterMonth,
+            1
+        );
+
+    const quarterEnd =
+        new Date(
+            year,
+            quarterMonth + 3,
+            1
+        );
+
+
+    /* MONTH */
+
+    const monthStart =
+        new Date(
+            year,
+            month,
+            1
+        );
+
+    const monthEnd =
+        new Date(
+            year,
+            month + 1,
+            1
+        );
+
+
+    /* WEEK */
+
+    const dayOfWeek =
+        now.getDay();
+
+    const monday =
+        new Date(
+            year,
+            month,
+            date -
+            (dayOfWeek === 0
+                ? 6
+                : dayOfWeek - 1)
+        );
+
+    monday.setHours(
+        0,
+        0,
+        0,
+        0
     );
 
-    const quarterEnd=new Date(
-        y,
-        Math.floor(m/3)*3+3,
-        1
+    const nextMonday =
+        new Date(monday);
+
+    nextMonday.setDate(
+        monday.getDate() + 7
     );
 
-    const monthStart=new Date(y,m,1);
-    const monthEnd=new Date(y,m+1,1);
 
-    const day=now.getDay();
-    const monday=new Date(y,m,d-(day===0?6:day-1));
-    monday.setHours(0,0,0,0);
+    /* DAY */
 
-    const sunday=new Date(monday);
-    sunday.setDate(monday.getDate()+7);
+    const dayStart =
+        new Date(
+            year,
+            month,
+            date
+        );
 
-    const dayStart=new Date(y,m,d);
-    const dayEnd=new Date(y,m,d+1);
+    const dayEnd =
+        new Date(
+            year,
+            month,
+            date + 1
+        );
 
-    set("year",progress(yearStart,yearEnd,now));
-    set("quarter",progress(quarterStart,quarterEnd,now));
-    set("month",progress(monthStart,monthEnd,now));
-    set("week",progress(monday,sunday,now));
-    set("day",progress(dayStart,dayEnd,now));
+
+    /* УСТАНОВКА */
+
+    setProgress(
+        "year",
+        progress(
+            yearStart,
+            yearEnd,
+            now
+        )
+    );
+
+    setProgress(
+        "quarter",
+        progress(
+            quarterStart,
+            quarterEnd,
+            now
+        )
+    );
+
+    setProgress(
+        "month",
+        progress(
+            monthStart,
+            monthEnd,
+            now
+        )
+    );
+
+    setProgress(
+        "week",
+        progress(
+            monday,
+            nextMonday,
+            now
+        )
+    );
+
+    setProgress(
+        "day",
+        progress(
+            dayStart,
+            dayEnd,
+            now
+        )
+    );
 }
 
-function set(id,value){
 
-    const n=Math.floor(value);
+/* ОТОБРАЖЕНИЕ */
 
-    document.getElementById(id).style.width=n+"%";
-    document.getElementById(id+"Text").textContent=n+"%";
+function setProgress(id, value) {
+
+    const percent =
+        Math.floor(value);
+
+    document.getElementById(id)
+        .style.width =
+        percent + "%";
+
+    document.getElementById(
+        id + "Text"
+    ).textContent =
+        percent + "%";
 }
+
+
+/* ПЕРВОЕ ОБНОВЛЕНИЕ */
 
 update();
-setInterval(update,1000);
+
+
+/* ОБНОВЛЕНИЕ КАЖДУЮ СЕКУНДУ */
+
+setInterval(
+    update,
+    1000
+);
 
 </script>
 
