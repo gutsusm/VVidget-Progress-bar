@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Time Progress</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: #191919;
+        overflow: hidden;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #ffffff;
+    }
+
+    .widget {
+        width: 100%;
+        height: 100%;
+        min-height: 120px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        padding: clamp(12px, 4vw, 28px);
+        gap: clamp(10px, 2.5vw, 18px);
+    }
+
+    .progress-row {
+        width: 100%;
+
+        display: grid;
+        grid-template-columns:
+            clamp(65px, 14%, 100px)
+            minmax(80px, 1fr)
+            clamp(38px, 8%, 55px);
+
+        align-items: center;
+        gap: clamp(8px, 2vw, 16px);
+    }
+
+    .label {
+        font-size: clamp(11px, 2vw, 15px);
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .percentage {
+        font-size: clamp(11px, 2vw, 15px);
+        font-weight: 500;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .bar {
+        width: 100%;
+        height: clamp(5px, 1vw, 8px);
+
+        background: #2a2a2a;
+        border-radius: 100px;
+        overflow: hidden;
+    }
+
+    .fill {
+        height: 100%;
+        width: 0%;
+
+        background: #ffffff;
+        border-radius: 100px;
+
+        transition: width 0.5s ease;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="widget">
+
+    <div class="progress-row">
+        <div class="label">Year</div>
+
+        <div class="bar">
+            <div class="fill" id="yearFill"></div>
+        </div>
+
+        <div class="percentage" id="yearPercent">0%</div>
+    </div>
+
+
+    <div class="progress-row">
+        <div class="label">Quarter</div>
+
+        <div class="bar">
+            <div class="fill" id="quarterFill"></div>
+        </div>
+
+        <div class="percentage" id="quarterPercent">0%</div>
+    </div>
+
+
+    <div class="progress-row">
+        <div class="label">Month</div>
+
+        <div class="bar">
+            <div class="fill" id="monthFill"></div>
+        </div>
+
+        <div class="percentage" id="monthPercent">0%</div>
+    </div>
+
+
+    <div class="progress-row">
+        <div class="label">Week</div>
+
+        <div class="bar">
+            <div class="fill" id="weekFill"></div>
+        </div>
+
+        <div class="percentage" id="weekPercent">0%</div>
+    </div>
+
+
+    <div class="progress-row">
+        <div class="label">Day</div>
+
+        <div class="bar">
+            <div class="fill" id="dayFill"></div>
+        </div>
+
+        <div class="percentage" id="dayPercent">0%</div>
+    </div>
+
+</div>
+
+
+<script>
+
+function percentagePassed(start, end, now) {
+
+    const total = end - start;
+    const passed = now - start;
+
+    let percentage = (passed / total) * 100;
+
+    percentage = Math.max(0, Math.min(100, percentage));
+
+    return percentage;
+}
+
+
+function startOfDay(date) {
+
+    return new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+    );
+}
+
+
+function endOfDay(date) {
+
+    return new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate() + 1
+    );
+}
+
+
+function startOfWeek(date) {
+
+    const result = new Date(date);
+
+    const day = result.getDay();
+
+    // Monday = 0
+    const difference = day === 0 ? -6 : 1 - day;
+
+    result.setDate(result.getDate() + difference);
+
+    result.setHours(0, 0, 0, 0);
+
+    return result;
+}
+
+
+function endOfWeek(date) {
+
+    const result = startOfWeek(date);
+
+    result.setDate(result.getDate() + 7);
+
+    return result;
+}
+
+
+function startOfMonth(date) {
+
+    return new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        1
+    );
+}
+
+
+function endOfMonth(date) {
+
+    return new Date(
+        date.getFullYear(),
+        date.getMonth() + 1,
+        1
+    );
+}
+
+
+function startOfQuarter(date) {
+
+    const quarterMonth = Math.floor(date.getMonth() / 3) * 3;
+
+    return new Date(
+        date.getFullYear(),
+        quarterMonth,
+        1
+    );
+}
+
+
+function endOfQuarter(date) {
+
+    const quarterMonth = Math.floor(date.getMonth() / 3) * 3;
+
+    return new Date(
+        date.getFullYear(),
+        quarterMonth + 3,
+        1
+    );
+}
+
+
+function startOfYear(date) {
+
+    return new Date(
+        date.getFullYear(),
+        0,
+        1
+    );
+}
+
+
+function endOfYear(date) {
+
+    return new Date(
+        date.getFullYear() + 1,
+        0,
+        1
+    );
+}
+
+
+function updateProgress() {
+
+    const now = new Date();
+
+
+    // YEAR
+    const yearProgress = percentagePassed(
+        startOfYear(now),
+        endOfYear(now),
+        now
+    );
+
+
+    // QUARTER
+    const quarterProgress = percentagePassed(
+        startOfQuarter(now),
+        endOfQuarter(now),
+        now
+    );
+
+
+    // MONTH
+    const monthProgress = percentagePassed(
+        startOfMonth(now),
+        endOfMonth(now),
+        now
+    );
+
+
+    // WEEK
+    const weekProgress = percentagePassed(
+        startOfWeek(now),
+        endOfWeek(now),
+        now
+    );
+
+
+    // DAY
+    const dayProgress = percentagePassed(
+        startOfDay(now),
+        endOfDay(now),
+        now
+    );
+
+
+    updateBar(
+        "year",
+        yearProgress
+    );
+
+    updateBar(
+        "quarter",
+        quarterProgress
+    );
+
+    updateBar(
+        "month",
+        monthProgress
+    );
+
+    updateBar(
+        "week",
+        weekProgress
+    );
+
+    updateBar(
+        "day",
+        dayProgress
+    );
+}
+
+
+function updateBar(name, value) {
+
+    const roundedValue = Math.floor(value);
+
+    document.getElementById(
+        name + "Fill"
+    ).style.width = roundedValue + "%";
+
+
+    document.getElementById(
+        name + "Percent"
+    ).textContent = roundedValue + "%";
+}
+
+
+// Первое обновление
+updateProgress();
+
+
+// Обновляем каждую секунду
+setInterval(
+    updateProgress,
+    1000
+);
+
+</script>
+
+</body>
+</html>
