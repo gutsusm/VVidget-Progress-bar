@@ -21,6 +21,8 @@ body {
     height: 100%;
 
     background: #191919;
+
+    overflow: hidden;
 }
 
 body {
@@ -31,30 +33,32 @@ body {
         sans-serif;
 
     color: #ffffff;
-
-    overflow: hidden;
 }
 
 
 /* =========================
-   САМ ВИДЖЕТ
+   ОСНОВА ВИДЖЕТА
    ========================= */
 
 .widget {
 
-    width: 320px;
-    height: 320px;
+    width: 100%;
+    height: 100%;
 
-    padding: 24px;
+    min-width: 180px;
+    min-height: 120px;
+
+    padding: 8%;
 
     display: flex;
+
     flex-direction: column;
+
     justify-content: center;
 
-    gap: 16px;
+    gap: 5%;
 
     background: #191919;
-
 }
 
 
@@ -69,14 +73,13 @@ body {
     display: grid;
 
     grid-template-columns:
-        62px
+        18%
         1fr
-        42px;
+        13%;
 
     align-items: center;
 
-    gap: 10px;
-
+    gap: 3%;
 }
 
 
@@ -86,14 +89,13 @@ body {
 
 .label {
 
-    font-size: 13px;
+    font-size: clamp(9px, 3.2vw, 18px);
 
     font-weight: 500;
 
     color: #ffffff;
 
     white-space: nowrap;
-
 }
 
 
@@ -103,7 +105,7 @@ body {
 
 .percent {
 
-    font-size: 13px;
+    font-size: clamp(9px, 3.2vw, 18px);
 
     font-weight: 500;
 
@@ -112,33 +114,31 @@ body {
     text-align: right;
 
     white-space: nowrap;
-
 }
 
 
 /* =========================
-   ВНЕШНИЙ BAR
+   BAR
    ========================= */
 
 .bar {
 
     width: 100%;
 
-    height: 17px;
+    height: clamp(10px, 5vw, 24px);
 
     background: #292929;
 
     border-radius: 100px;
 
-    padding: 4px;
+    padding: clamp(2px, 1vw, 5px);
 
     overflow: hidden;
-
 }
 
 
 /* =========================
-   ЗАПОЛНЕНИЕ
+   БЕЛАЯ ЗАПОЛНЕННАЯ ЧАСТЬ
    ========================= */
 
 .fill {
@@ -153,53 +153,6 @@ body {
 
     transition:
         width 0.5s ease;
-
-}
-
-
-/* =========================
-   ЕСЛИ ЭКРАН МАЛЕНЬКИЙ
-   ========================= */
-
-@media (max-width: 340px) {
-
-    .widget {
-
-        width: 280px;
-        height: 280px;
-
-        padding: 18px;
-
-        gap: 13px;
-
-    }
-
-    .row {
-
-        grid-template-columns:
-            52px
-            1fr
-            36px;
-
-        gap: 7px;
-
-    }
-
-    .label,
-    .percent {
-
-        font-size: 11px;
-
-    }
-
-    .bar {
-
-        height: 15px;
-
-        padding: 3px;
-
-    }
-
 }
 
 </style>
@@ -207,7 +160,6 @@ body {
 
 
 <body>
-
 
 <div class="widget">
 
@@ -345,12 +297,11 @@ body {
 </div>
 
 
-
 <script>
 
 
 /* =========================
-   ПРОЦЕНТ
+   РАСЧЁТ ПРОЦЕНТА
    ========================= */
 
 function progress(start, end, now) {
@@ -363,7 +314,6 @@ function progress(start, end, now) {
         0,
         Math.min(100, value)
     );
-
 }
 
 
@@ -468,9 +418,7 @@ function update() {
 
 
     const nextMonday =
-        new Date(
-            monday
-        );
+        new Date(monday);
 
 
     nextMonday.setDate(
@@ -495,8 +443,6 @@ function update() {
         );
 
 
-    /* YEAR */
-
     setProgress(
         "year",
         progress(
@@ -506,8 +452,6 @@ function update() {
         )
     );
 
-
-    /* QUARTER */
 
     setProgress(
         "quarter",
@@ -519,8 +463,6 @@ function update() {
     );
 
 
-    /* MONTH */
-
     setProgress(
         "month",
         progress(
@@ -531,8 +473,6 @@ function update() {
     );
 
 
-    /* WEEK */
-
     setProgress(
         "week",
         progress(
@@ -542,8 +482,6 @@ function update() {
         )
     );
 
-
-    /* DAY */
 
     setProgress(
         "day",
@@ -592,15 +530,12 @@ function setProgress(
 
 update();
 
-
 setInterval(
     update,
     1000
 );
 
-
 </script>
-
 
 </body>
 </html>
